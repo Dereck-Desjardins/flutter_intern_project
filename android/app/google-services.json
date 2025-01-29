@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "501956332145",
+    "project_id": "flutter-intern-practice-1613a",
+    "storage_bucket": "flutter-intern-practice-1613a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:501956332145:android:f4337d07a72ca14ee369d0",
+        "android_client_info": {
+          "package_name": "com.example.flutter_intern_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMDdZ10mWzcKU2bLoD8NCP_Jksrj3emGc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
