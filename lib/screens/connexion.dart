@@ -128,6 +128,16 @@ class ConnexionScreenState extends State<ConnexionScreen> {
                           _enteredPassword = value!;
                         },
                       ),
+                      if(_formMode == 'connect')
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: InkWell(
+                            onTap: (){
+                              //to do
+                            },
+                            child: Text('Forgot my password', style: Theme.of(context).textTheme.labelSmall),
+                          ),
+                        ),  
                       const SizedBox(
                         height: 20,
                       ),
@@ -152,25 +162,30 @@ class ConnexionScreenState extends State<ConnexionScreen> {
                           ),
                         ],
                       ),
+                      SizedBox(height: 15,),
                       Row(
-                        
                         children: [
-                          Expanded(
-                            child: TextButton(
-                              onPressed: () {
-                                if(_formMode == 'connect'){
-                                  setState(() {
-                                    _formMode = 'create';
-                                  });
-                                }
-                                else{
-                                  setState(() {
-                                    _formMode = 'connect';
-                                  });
-                                  
-                                }
-                              },
-                              child: Text(_formMode == 'connect' ? 'Create an account': 'Go to Log in', style: Theme.of(context).textTheme.labelSmall),
+                          Expanded(    
+                            child: Center(
+                              child: Column(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      if(_formMode == 'connect'){
+                                        setState(() {
+                                          _formMode = 'create';
+                                        });
+                                      }
+                                      else{
+                                        setState(() {
+                                          _formMode = 'connect';
+                                        });
+                                      }
+                                    },
+                                    child: Text(_formMode == 'connect' ? 'Create an account': 'Go to Log in', style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Theme.of(context).colorScheme.primary)),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ],
