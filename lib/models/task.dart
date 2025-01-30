@@ -12,6 +12,14 @@ enum TaskType{
   event,
 }
 
+const taskTypeIcons = {
+  TaskType.work: Icons.work,
+  TaskType.chore: Icons.shopping_cart,
+  TaskType.personnal: Icons.person,
+  TaskType.event: Icons.control_camera_rounded,
+
+};
+
 class Task{
   Task({required this.creatorId, required this.title, required this.details, required this.date, required this.hour, required this.taskType}): id = uuid.v4();
 
@@ -24,12 +32,5 @@ class Task{
   final TaskType taskType;
 
   final DateTime creation = DateTime.now();
-
-  String get getFormattedDate{
-    if(date != null){
-      return formatter.format(date!);
-    }
-    return 'No assigned date';
-  }
 
 }
