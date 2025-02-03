@@ -34,6 +34,7 @@ class mainDrawer extends StatelessWidget{
                   color: Theme.of(context).colorScheme.primary,),
                 ),
                 onTap: (){
+                  Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (ctx)=>ProfileScreen()),);
                 },
               ),

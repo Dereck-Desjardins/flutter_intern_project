@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
@@ -34,6 +35,18 @@ class ConnexionScreenState extends State<ConnexionScreen> {
           email: _enteredMail, 
           password: _enteredPassword
         );
+        final currentUser = FirebaseAuth.instance.currentUser!;
+
+      currentUser.sendEmailVerification();
+    //recreate a new task in firestore
+      FirebaseFirestore.instance.collection('users').doc(currentUser.uid).set({
+        'email': _enteredMail,
+        'password': _enteredPassword,
+        'name':'default',
+        'surname':'default',
+        'wantNotifications': false,
+      });
+      
       }
       else{
         await _firebase.signInWithEmailAndPassword(
