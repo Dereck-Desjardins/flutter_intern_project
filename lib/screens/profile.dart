@@ -49,14 +49,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           body: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.only(top: 20, left: 20, right: 10),
-                child: Column(
-                  children: [
-                    ProfileField(fieldName: 'email', fieldValue: _email),
-                    ProfileField(fieldName: 'name', fieldValue: _userName, condition: (value)=> value!.length>=3,),
-                    ProfileField(fieldName: 'surname', fieldValue: _lastName, condition: (value)=> value!.length>=3,),
-                    ProfileField(fieldName: 'password', fieldValue: _password, condition: (value)=> value!.length>=8,),     
-                  ],
+              padding: const EdgeInsets.only(top: 5, left: 5, right: 10),
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      children: [
+                        ProfileField(fieldName: 'email', fieldValue: _email),
+                        ProfileField(fieldName: 'name', fieldValue: _userName, condition: (value)=> value!.length>=3&&value!.length<20,),
+                        ProfileField(fieldName: 'surname', fieldValue: _lastName, condition: (value)=> value!.length>=3&&value!.length<20,),
+                        ProfileField(fieldName: 'password', fieldValue: _password, condition: (value)=> value!.length>=8&&value!.length<20,),    
+                        Row(
+                          children: [
+
+                          ],
+                        ) 
+                      ],
+                    ),
+                  ),
                 ),
               ),
           ),

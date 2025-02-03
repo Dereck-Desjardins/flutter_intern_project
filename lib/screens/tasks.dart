@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_intern_project/models/task.dart';
 import 'package:flutter_intern_project/screens/drawer.dart';
 import 'package:flutter_intern_project/screens/new_task.dart';
+import 'package:flutter_intern_project/screens/unverified.dart';
 import 'package:flutter_intern_project/widget/task.dart';
 
 class TasksScreen extends StatelessWidget{
@@ -68,7 +69,7 @@ class TasksScreen extends StatelessWidget{
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-      appBar: AppBar(
+      appBar: FirebaseAuth.instance.currentUser!.emailVerified ? AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
         title: Text('Tasks', style: TextStyle(color: Theme.of(context).colorScheme.primaryContainer)),
         actions: [
@@ -79,56 +80,66 @@ class TasksScreen extends StatelessWidget{
             Icons.add, color: Theme.of(context).colorScheme.primaryContainer),
           ),
         ],
+      ): AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        title: Text('Unverified', style: TextStyle(color: Theme.of(context).colorScheme.primaryContainer)),
       ),
-      drawer: mainDrawer() ,
-      body: StreamBuilder(
-        stream: myTasks, 
-        builder: (ctx, tasksSnapshots){
-        if(tasksSnapshots.connectionState == ConnectionState.waiting){
-          return Center(child: CircularProgressIndicator(),);
-        }
-
-        if(!tasksSnapshots.hasData || tasksSnapshots.data!.docs.isEmpty){
-          return Center(child:
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('You currently have not task planned!', style: Theme.of(context).textTheme.titleLarge),
-                Text('You can add one by pressing the + button in the appbar', style: Theme.of(context).textTheme.titleSmall)
-              ],
-            )
-           ,);
-        }
-
-        if(tasksSnapshots.hasError){
-          return Center(child: Text('Something went wrong...'),);
-        }
-          final myTasks = tasksSnapshots.data!.docs;
-          return ListView.builder(
-            itemCount: myTasks.length,
-            itemBuilder: (context, index) {
-              TaskType taskType = TaskType.chore;
-              TimeOfDay? timeOfDay;
-              taskType = convertTaskType(myTasks[index]['tasktype']);
-              timeOfDay = convertTimeOfDay(myTasks[index]['hour']);
-              DateTime? formattedDate = formatDateString(myTasks[index]['date']);
-              final Task thisTask = 
-                Task(
-                  creatorId: myTasks[index]['creatorId'], 
-                  title: myTasks[index]['title'], 
-                  details: myTasks[index]['details'], 
-                  date: formattedDate, 
-                  hour: timeOfDay, 
-                  taskType: taskType, 
-                );
-              return Dismissible(
-                onDismissed: (direction){removeTask(myTasks[index].id);} ,
-                key: ValueKey(myTasks[index]),
-                child: TaskItem(task: thisTask, docId: myTasks[index].id,)
-                );
-            },
-          );
-        }),
+      drawer:FirebaseAuth.instance.currentUser!.emailVerified ? mainDrawer() : null ,
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: StreamBuilder(
+          stream: myTasks, 
+          builder: (ctx, tasksSnapshots){
+          if(tasksSnapshots.connectionState == ConnectionState.waiting){
+            return Center(child: CircularProgressIndicator(),);
+          }
+        
+          if(!tasksSnapshots.hasData || tasksSnapshots.data!.docs.isEmpty){
+            return Center(child:
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('You currently have not task planned!', style: Theme.of(context).textTheme.titleLarge),
+                  Text('You can add one by pressing the + button in the appbar', style: Theme.of(context).textTheme.titleSmall)
+                ],
+              )
+             ,);
+          }
+        
+          if(tasksSnapshots.hasError){
+            return Center(child: Text('Something went wrong...'),);
+          }
+          if(!FirebaseAuth.instance.currentUser!.emailVerified){
+            return UnverifiedScreen();
+          }
+        
+            final myTasks = tasksSnapshots.data!.docs;
+            return ListView.builder(
+              itemCount: myTasks.length,
+              itemBuilder: (context, index) {
+                TaskType taskType = TaskType.chore;
+                TimeOfDay? timeOfDay;
+                taskType = convertTaskType(myTasks[index]['tasktype']);
+                timeOfDay = convertTimeOfDay(myTasks[index]['hour']);
+                DateTime? formattedDate = formatDateString(myTasks[index]['date']);
+                final Task thisTask = 
+                  Task(
+                    creatorId: myTasks[index]['creatorId'], 
+                    title: myTasks[index]['title'], 
+                    details: myTasks[index]['details'], 
+                    date: formattedDate, 
+                    hour: timeOfDay, 
+                    taskType: taskType, 
+                  );
+                return Dismissible(
+                  onDismissed: (direction){removeTask(myTasks[index].id);} ,
+                  key: ValueKey(myTasks[index]),
+                  child: TaskItem(task: thisTask, docId: myTasks[index].id,)
+                  );
+              },
+            );
+          }),
+      ),
     );
   }
 }

@@ -46,7 +46,7 @@ class ConnexionScreenState extends State<ConnexionScreen> {
         'surname':'default',
         'wantNotifications': false,
       });
-      
+
       }
       else{
         await _firebase.signInWithEmailAndPassword(
@@ -76,7 +76,7 @@ class ConnexionScreenState extends State<ConnexionScreen> {
 
   String? _validatePassword(String password) {
     //Complexifier la demande de mot de passe possible
-    if (password.trim().length < 8) {
+    if (password.trim().length < 8 && password.length>20) {
       return 'The password must be at least 8 characters';
     }
     return null;

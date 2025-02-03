@@ -220,15 +220,37 @@ class NewTaskState extends State<NewTask> {
                             );
                           }
                         ),
-                        Row(
-                          children: [
-                            if(!isEditing)
-                              TextButton(onPressed:(){_formKey.currentState!.reset();} , child: Text("Reset")),
-                            ElevatedButton(onPressed: isEditing? _editTask :_submitTask , child: Text(isEditing?"Update Task":"Create Task")),
-                          ],
-                        ),                    
+                        if(isEditing)
+                          ElevatedButton(onPressed: (){}, child: Text('Add a new reminder ')),
+                        if(!isEditing)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(),
+                                if(!isEditing)
+                                  TextButton(onPressed:(){_formKey.currentState!.reset();} , child: Text("Reset")),
+                                ElevatedButton(onPressed: isEditing? _editTask :_submitTask , child: Text(isEditing?"Update Task":"Create Task")),
+                              ],
+                          ),  
                       ],
-                    )
+                    ),
+                    if(isEditing)
+                    Column(
+                      children: [
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(),
+                              if(!isEditing)
+                                TextButton(onPressed:(){_formKey.currentState!.reset();} , child: Text("Reset")),
+                              ElevatedButton(onPressed: isEditing? _editTask :_submitTask , child: Text(isEditing?"Update Task":"Create Task")),
+                            ],
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),

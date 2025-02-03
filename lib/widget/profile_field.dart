@@ -40,15 +40,18 @@ class _ProfileFieldState extends State<ProfileField> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text('${widget.fieldName.toUpperCase()}:', style: Theme.of(context).textTheme.headlineSmall!.copyWith(fontWeight: FontWeight.bold),),
+        Text('${widget.fieldName.toUpperCase()}:', style: Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),),
         if(!_isEdit)
           Row(children: [  
-            Text(widget.fieldValue, style: Theme.of(context).textTheme.bodyLarge!,),
-            SizedBox(width: 60,),
+            Text(
+              widget.fieldValue, 
+              style: Theme.of(context).textTheme.bodyLarge!,
+              overflow: TextOverflow.ellipsis,),
+              const SizedBox(width: 20,),
             if(widget.fieldName != 'email')
               IconButton(onPressed: ()=>_isEdit = !_isEdit, icon: Icon(Icons.edit),),
             if(widget.fieldName == 'email')
-              const SizedBox(width: 48, height: 50,),
+              const SizedBox( height: 50,),
             
           ],),
         if(_isEdit)
