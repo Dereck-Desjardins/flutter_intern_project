@@ -44,6 +44,10 @@ class TaskItem extends StatelessWidget{
                      Text(task.hour!.format(context)),
                 ],
               ),
+              if(task.reminder!=null)
+                SizedBox(width: 10,),
+              if(task.reminder!=null)
+                Icon(Icons.notifications),
           
             ],
           ),
