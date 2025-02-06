@@ -52,8 +52,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: const EdgeInsets.only(top: 5, left: 5, right: 10),
                 child: Card(
                   child: Padding(
-                    padding: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(15.0),
                     child: Column(
+                      spacing: 5,
                       children: [
                         ProfileField(fieldName: 'email', fieldValue: _email),
                         ProfileField(fieldName: 'name', fieldValue: _userName, condition: (value)=> value!.length>=3&&value!.length<20,),

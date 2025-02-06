@@ -42,17 +42,18 @@ class _ProfileFieldState extends State<ProfileField> {
       children: [
         Text('${widget.fieldName.toUpperCase()}:', style: Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),),
         if(!_isEdit)
-          Row(children: [  
+          Row(
+            spacing: 20 ,
+            children: [  
             Text(
               widget.fieldValue, 
               style: Theme.of(context).textTheme.bodyLarge!,
               overflow: TextOverflow.ellipsis,),
-              const SizedBox(width: 20,),
             if(widget.fieldName != 'email')
               IconButton(onPressed: ()=>_isEdit = !_isEdit, icon: Icon(Icons.edit),),
             if(widget.fieldName == 'email')
-              const SizedBox( height: 50,),
-            
+              SizedBox(height: 40,)
+
           ],),
         if(_isEdit)
             Expanded(
@@ -60,7 +61,6 @@ class _ProfileFieldState extends State<ProfileField> {
                 key: _formKey,
 
                 child: Row(children: [  
-                    const SizedBox(width: 15,),
                     Expanded(child: 
                       TextFormField(
                         initialValue: widget.fieldValue, 

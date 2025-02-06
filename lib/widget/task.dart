@@ -17,13 +17,13 @@ class TaskItem extends StatelessWidget{
         child:Padding(
           padding: const EdgeInsets.only(top: 10, bottom: 10, left: 18,right: 18),
           child: Row(
+            spacing: 15,
             children: [
               Column(
                 children: [
                   Icon(taskTypeIcons[task.taskType]),
                 ],
               ),
-              const SizedBox(width: 15,),
               Expanded(
                 child: Column(
                   children: [
@@ -35,7 +35,6 @@ class TaskItem extends StatelessWidget{
                   ],
                 ),
               ),
-              const SizedBox(width: 15,),
               Column(
                 children: [
                   if(task.date!=null)
@@ -45,7 +44,6 @@ class TaskItem extends StatelessWidget{
                 ],
               ),
               if(task.reminder!=null)
-                SizedBox(width: 10,),
               if(task.reminder!=null)
                 Icon(Icons.notifications),
           

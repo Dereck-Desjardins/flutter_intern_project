@@ -34,22 +34,7 @@ class NewTaskState extends State<NewTask> {
   ReminderType _selectedReminderType = ReminderType.set;
 
   int _dayToNumber(Weekday day){
-    if(day == Weekday.monday){
-      return 0;
-    } else if(day == Weekday.thuesday){
-      return 1;
-    }else if(day == Weekday.wednesday){
-      return 2;
-    }else if(day == Weekday.thursday){
-      return 3;
-    }else if(day == Weekday.friday){
-      return 4;
-    }else if(day == Weekday.saturday){
-      return 5;
-    }else if(day == Weekday.sunday){
-      return 6;
-    }
-    return 0;
+    return day.index;
   }
   
 
@@ -206,6 +191,7 @@ class NewTaskState extends State<NewTask> {
                   child: Form(
                     key: _formKey,
                     child: Column(
+                      spacing: 20,
                       children: [
                         TextFormField(
                           initialValue: isEditing? widget.editTask!.title:"",
@@ -226,9 +212,7 @@ class NewTaskState extends State<NewTask> {
                             });
                           },
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
+
                         TextFormField(
                           initialValue: isEditing? widget.editTask!.details:"",
                           maxLength: 60,
@@ -246,9 +230,6 @@ class NewTaskState extends State<NewTask> {
                               _enteredDetails = newValue!;
                             });
                           }),
-                        const SizedBox(
-                          height: 20,
-                        ),
                         Row(
                           
                           mainAxisAlignment: _selectedDate==null? MainAxisAlignment.center:MainAxisAlignment.spaceBetween,
@@ -276,9 +257,7 @@ class NewTaskState extends State<NewTask> {
                               ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
+
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -317,10 +296,8 @@ class NewTaskState extends State<NewTask> {
                             if(!isEditing)
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    SizedBox(),
-                                    if(!isEditing)
-                                      TextButton(onPressed:(){_formKey.currentState!.reset();} , child: Text("Reset")),
+                                  children: [  
+                                    TextButton(onPressed:(){_formKey.currentState!.reset();} , child: Text("Reset")),
                                     ElevatedButton(onPressed: isEditing? _editTask :_submitTask , child: Text(isEditing?"Update Task":"Create Task")),
                                   ],
                               ),  
@@ -329,9 +306,6 @@ class NewTaskState extends State<NewTask> {
                         if(isEditing)
                         Column(
                           children: [
-                            const SizedBox(
-                              height: 10,
-                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
@@ -361,11 +335,13 @@ class NewTaskState extends State<NewTask> {
                     Form(
                     key: _reminderFormKey,
                     child: Column(
+                      spacing: 10,
                       children: [
                         Text('Create your Reminder', style: Theme.of(context).textTheme.bodyLarge,),
-                        SizedBox(height: 10,),
+
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          
                           children: [
                             Column(
                               children: [

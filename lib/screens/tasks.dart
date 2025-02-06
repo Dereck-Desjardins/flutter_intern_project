@@ -46,57 +46,15 @@ class _TasksScreenState extends State<TasksScreen> {
   }
 
   Weekday convertWeekDay(String dataWeekday){
-    if( dataWeekday == '0'){
-      return Weekday.monday;
-    }
-    else if( dataWeekday == '1'){
-      return  Weekday.thuesday;
-    }
-    else if( dataWeekday == '2'){
-      return  Weekday.wednesday;
-    }
-    else if( dataWeekday == '3'){
-      return  Weekday.thursday;
-    }
-        else if( dataWeekday == '4'){
-      return  Weekday.friday;
-    }
-        else if( dataWeekday == '5'){
-      return  Weekday.saturday;
-    }
-        else if( dataWeekday == '6'){
-      return  Weekday.sunday;
-    }
-    return Weekday.monday;
+    return Weekday.values.firstWhere((value)=>value.index == int.tryParse(dataWeekday));
   }
 
   TaskType convertTaskType(String dataType){
-    if( dataType == 'TaskType.personnal'){
-      return TaskType.personnal;
-    }
-    else if( dataType == 'TaskType.work'){
-      return  TaskType.work;
-    }
-    else if( dataType == 'TaskType.event'){
-      return  TaskType.event;
-    }
-    else if( dataType == 'TaskType.chore'){
-      return  TaskType.chore;
-    }
-    return TaskType.chore;
+    return TaskType.values.firstWhere((value)=>value.toString() == dataType);
   }
 
   ReminderType convertReminderType(String dataReminderType){
-    if( dataReminderType == 'ReminderType.set'){
-      return ReminderType.set;
-    }
-    else if( dataReminderType == 'ReminderType.weekly'){
-      return  ReminderType.weekly;
-    }
-    else if( dataReminderType == 'ReminderType.daily'){
-      return  ReminderType.daily;
-    }
-    return ReminderType.set;
+    return ReminderType.values.firstWhere((value)=>value.toString() == dataReminderType);
   }
 
   TimeOfDay? convertTimeOfDay(String time){

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_intern_project/firebase_options.dart';
 import 'package:flutter_intern_project/screens/connexion.dart';
 import 'package:flutter_intern_project/screens/tasks.dart';
-import 'package:flutter_intern_project/screens/unverified.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async{
@@ -31,8 +30,6 @@ class MyApp extends StatelessWidget {
           if(snapshot.hasData){
             return const TasksScreen();
           }
-
-        
         return ConnexionScreen();
       }),
       
