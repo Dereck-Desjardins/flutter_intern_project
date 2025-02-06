@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intern_project/screens/profile.dart';
 
@@ -59,7 +60,10 @@ class mainDrawer extends StatelessWidget{
                 title: Text('Logout', style: Theme.of(context).textTheme.titleMedium!.copyWith(
                   color: Theme.of(context).colorScheme.primary,),
                 ),
-                onTap: (){FirebaseAuth.instance.signOut();},
+                onTap: (){  
+                  FirebaseMessaging.instance.unsubscribeFromTopic(FirebaseAuth.instance.currentUser!.uid);
+                  FirebaseAuth.instance.signOut();
+                },
               ),
             ],
           )

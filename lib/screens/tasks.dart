@@ -1,6 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intern_project/models/reminder.dart';
 import 'package:flutter_intern_project/models/task.dart';
@@ -9,8 +10,27 @@ import 'package:flutter_intern_project/screens/new_task.dart';
 import 'package:flutter_intern_project/screens/unverified.dart';
 import 'package:flutter_intern_project/widget/task.dart';
 
-class TasksScreen extends StatelessWidget{
+class TasksScreen extends StatefulWidget{
   const TasksScreen({super.key});
+
+  @override
+  State<TasksScreen> createState() => _TasksScreenState();
+}
+
+class _TasksScreenState extends State<TasksScreen> {
+
+  void setupPushNotifications() async{
+    final messager = FirebaseMessaging.instance;
+    final notifiactionSettings = await messager.requestPermission();
+    final token = await messager.getToken();
+    messager.subscribeToTopic(FirebaseAuth.instance.currentUser!.uid);
+  }
+
+  @override
+    void initState(){
+      super.initState();
+      setupPushNotifications();
+    }
 
 
   DateTime? formatDateString(String date){
@@ -26,25 +46,25 @@ class TasksScreen extends StatelessWidget{
   }
 
   Weekday convertWeekDay(String dataWeekday){
-    if( dataWeekday == 'Weekday.monday'){
+    if( dataWeekday == '0'){
       return Weekday.monday;
     }
-    else if( dataWeekday == 'Weekday.thuesday'){
+    else if( dataWeekday == '1'){
       return  Weekday.thuesday;
     }
-    else if( dataWeekday == 'Weekday.wednesday'){
+    else if( dataWeekday == '2'){
       return  Weekday.wednesday;
     }
-    else if( dataWeekday == 'Weekday.thursday'){
+    else if( dataWeekday == '3'){
       return  Weekday.thursday;
     }
-        else if( dataWeekday == 'Weekday.friday'){
+        else if( dataWeekday == '4'){
       return  Weekday.friday;
     }
-        else if( dataWeekday == 'Weekday.saturday'){
+        else if( dataWeekday == '5'){
       return  Weekday.saturday;
     }
-        else if( dataWeekday == 'Weekday.sunday'){
+        else if( dataWeekday == '6'){
       return  Weekday.sunday;
     }
     return Weekday.monday;
@@ -89,8 +109,6 @@ class TasksScreen extends StatelessWidget{
     return null;
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final myTasks = FirebaseFirestore.instance.collection('tasks').doc(FirebaseAuth.instance.currentUser!.uid).collection('mytasks').snapshots();
@@ -132,7 +150,11 @@ class TasksScreen extends StatelessWidget{
           if(tasksSnapshots.connectionState == ConnectionState.waiting){
             return Center(child: CircularProgressIndicator(),);
           }
-        
+
+          if(!FirebaseAuth.instance.currentUser!.emailVerified){
+            return UnverifiedScreen();
+          }
+
           if(!tasksSnapshots.hasData || tasksSnapshots.data!.docs.isEmpty){
             return Center(child:
               Column(
@@ -148,10 +170,8 @@ class TasksScreen extends StatelessWidget{
           if(tasksSnapshots.hasError){
             return Center(child: Text('Something went wrong...'),);
           }
-          if(!FirebaseAuth.instance.currentUser!.emailVerified){
-            return UnverifiedScreen();
-          }
-        
+
+
             final myTasks = tasksSnapshots.data!.docs;
             return ListView.builder(
               itemCount: myTasks.length,
@@ -179,7 +199,7 @@ class TasksScreen extends StatelessWidget{
                             frequency: convertReminderType(data!['frequency']) , 
                             date: data['date'] != null ? formatDateString(data['date']):null,
                             hour: data['hour'] != null ?  convertTimeOfDay(data['hour']):null,
-                            weekday: data['weekday'] != null ? convertWeekDay(data['weekday']):null,
+                            weekday: data['weekday'] != null ? convertWeekDay(data['weekday'].toString()):null,
                           );
                         final Task thisTask = 
                           Task(
@@ -221,7 +241,7 @@ class TasksScreen extends StatelessWidget{
                 }
               },
             );
-          }),
+        }),
       ),
     );
   }

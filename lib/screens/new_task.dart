@@ -33,6 +33,24 @@ class NewTaskState extends State<NewTask> {
   Weekday? _selectedReminderWeekday;
   ReminderType _selectedReminderType = ReminderType.set;
 
+  int _dayToNumber(Weekday day){
+    if(day == Weekday.monday){
+      return 0;
+    } else if(day == Weekday.thuesday){
+      return 1;
+    }else if(day == Weekday.wednesday){
+      return 2;
+    }else if(day == Weekday.thursday){
+      return 3;
+    }else if(day == Weekday.friday){
+      return 4;
+    }else if(day == Weekday.saturday){
+      return 5;
+    }else if(day == Weekday.sunday){
+      return 6;
+    }
+    return 0;
+  }
   
 
   void _datePicker(String datePickerType) async {
@@ -121,10 +139,11 @@ class NewTaskState extends State<NewTask> {
 
     if(createReminder){
       FirebaseFirestore.instance.collection('reminders').doc(widget.docId).set({
+        'userId':FirebaseAuth.instance.currentUser!.uid,
         'frequency': _selectedReminderType.toString(),
         'date': _selectedReminderDate != null ? formatter.format(_selectedReminderDate!):'',
         'hour': _selectedReminderHour != null ? _selectedReminderHour!.format(context): '',
-        'weekday': _selectedReminderWeekday != null ? _selectedReminderWeekday.toString():'',
+        'weekday': _selectedReminderWeekday != null ? _dayToNumber(_selectedReminderWeekday!):'',
       });
     }
 
@@ -365,6 +384,9 @@ class NewTaskState extends State<NewTask> {
                                     onChanged: (value) {
                                       if (value == null) {
                                         return;
+                                      }
+                                      if(_selectedReminderType == ReminderType.weekly){
+                                        _selectedReminderDate = null;
                                       }
                                       setState(() {
                                         _selectedReminderType = value;
