@@ -133,7 +133,8 @@ class NewTaskState extends State<NewTask> {
     }
 
     if(!createReminder && widget.editTask!.reminder != null){
-        FirebaseFirestore.instance.collection('reminders').doc(widget.docId).delete();
+      widget.editTask!.reminder == null;
+      FirebaseFirestore.instance.collection('reminders').doc(widget.docId).delete();
     }
 
     Navigator.pop(context);

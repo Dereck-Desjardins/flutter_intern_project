@@ -21,7 +21,7 @@ const taskTypeIcons = {
 };
 
 class Task{
-  Task({required this.creatorId, required this.title, required this.details, required this.date, required this.hour, required this.taskType, this.reminder}): id = uuid.v4();
+  Task({required this.creatorId, required this.title, required this.details, required this.date, required this.hour, required this.taskType, this.reminder, required this.id});
 
   final String id;
   final String creatorId;
