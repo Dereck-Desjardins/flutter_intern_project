@@ -1,30 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_intern_project/providers/currentuser_provider.dart';
 import 'package:flutter_intern_project/widget/profile_field.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProfileScreen extends StatefulWidget{
+class ProfileScreen extends ConsumerStatefulWidget{
   const ProfileScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   String _userName = '';
   String _lastName = '';
   String _email = '';
   String _password = '';
 
-  bool _nameEdit = false;
-  bool _lastNameEdit = false;
-  bool _emailEdit = false;
-  bool _passwordEdit = false;
 
-
-  void _getProfileInfos() async{
-    final userProfileInfos = await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).get();
-    if(this.mounted){
+  void _getProfileInfos() async{  
+    final currentUser = ref.watch(currentUserProvider);
+    final userProfileInfos = await FirebaseFirestore.instance.collection('users').doc(currentUser!.uid).get();
+    if(mounted){
       setState(() {
         _userName = userProfileInfos['name'];  
         _lastName = userProfileInfos['surname'];

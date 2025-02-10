@@ -1,16 +1,27 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_intern_project/models/reminder.dart';
+import 'package:flutter_intern_project/providers/currentuser_provider.dart';
+import 'package:flutter_intern_project/providers/reminder_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class RemindersScreen extends StatelessWidget{
+class RemindersScreen extends ConsumerWidget{
   const RemindersScreen({super.key});
 
 
-
-
   @override
-  Widget build(BuildContext context) {
-    final myReminders = FirebaseFirestore.instance.collection('tasks').doc(FirebaseAuth.instance.currentUser!.uid).collection('mytasks').snapshots();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final allReminders = ref.watch(remindersDataProvider);
+    final currentUserUid = ref.watch(currentUserProvider)!.uid;
+
+    final myReminders = [];
+    allReminders.when(
+      data: (reminders){
+        myReminders.add(reminders.where((singleReminder) => singleReminder.frequency == ReminderType.set));
+      },  
+      error: (e,st){return Center(child: Text('Failed to load reminders',),);}, 
+      loading: (){return Center(child: CircularProgressIndicator(),);}
+    );
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
       appBar: AppBar(
@@ -19,60 +30,11 @@ class RemindersScreen extends StatelessWidget{
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: StreamBuilder(
-          stream: myReminders, 
-          builder: (ctx, remindersSnapshots){
-          if(remindersSnapshots.connectionState == ConnectionState.waiting){
-            return Center(child: CircularProgressIndicator(),);
-          }
-        
-          if(!remindersSnapshots.hasData || remindersSnapshots.data!.docs.isEmpty){
-            return Center(child:
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('You currently have not task planned!', style: Theme.of(context).textTheme.titleLarge),
-                  Text('You can add one by pressing the + button in the appbar', style: Theme.of(context).textTheme.titleSmall)
-                ],
-              )
-             ,);
-          }
-        
-          if(remindersSnapshots.hasError){
-            return Center(child: Text('Something went wrong...'),);
-          }
-        
-            final myReminders = remindersSnapshots.data!.docs;
-            return ListView.builder(
-              itemCount: myReminders.length,
-              itemBuilder: (context, index) {
-
-                // Create each reminders widget 
-
-
-              //   TaskType taskType = TaskType.chore;
-              //   TimeOfDay? timeOfDay;
-              //   taskType = convertTaskType(myTasks[index]['tasktype']);
-              //   timeOfDay = convertTimeOfDay(myTasks[index]['hour']);
-              //   DateTime? formattedDate = formatDateString(myTasks[index]['date']);
-              //   final Task thisTask = 
-              //     Task(
-              //       creatorId: myTasks[index]['creatorId'], 
-              //       title: myTasks[index]['title'], 
-              //       details: myTasks[index]['details'], 
-              //       date: formattedDate, 
-              //       hour: timeOfDay, 
-              //       taskType: taskType, 
-              //     );
-              //   return Dismissible(
-              //     onDismissed: (direction){removeTask(myTasks[index].id);} ,
-              //     key: ValueKey(myTasks[index]),
-              //     child: TaskItem(task: thisTask, docId: myTasks[index].id,)
-              //     );
-              },
-            );
-          }),
-      ),
+        child: myReminders.isNotEmpty ? ListView.builder(
+          itemCount: myReminders.length,
+          itemBuilder: (ctx, snapshot)=> Text('allo')
+          ) : Center(child: Text('no reminders'),),
+      )
     );
   }
 

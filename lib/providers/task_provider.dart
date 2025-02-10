@@ -3,12 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intern_project/models/reminder.dart';
 import 'package:flutter_intern_project/models/task.dart';
-import 'package:flutter_intern_project/providers/reminderProvider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class TaskManager{
   late Stream<List<Task>> _stream;
-
+  
   
   DateTime? formatDateString(String date){
     if(date != ''){
@@ -35,9 +34,10 @@ class TaskManager{
     return null;
   }
 
-
+//CREER UN PROVIDER QUI VA VERIFIER LES CHANGEMENTS DE currentUser.uid
 
   Future<void> _init() async{
+    
     final Stream<QuerySnapshot> snapshot = FirebaseFirestore.instance.collection('tasks').doc(FirebaseAuth.instance.currentUser!.uid).collection('mytasks').snapshots();
 
 
@@ -87,8 +87,8 @@ class TaskManager{
 }
 
 
-final tasksDataProvider = StreamProvider  <List<Task>> ((ref){
-
+final tasksDataProvider = StreamProvider.autoDispose <List<Task>> ((ref){
+  
   final manager = TaskManager();
   manager._init();
   return manager._stream; 

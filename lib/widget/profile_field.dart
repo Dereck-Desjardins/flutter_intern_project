@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 
-class ProfileField extends StatefulWidget{
+import 'package:flutter/material.dart';
+import 'package:flutter_intern_project/providers/currentuser_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class ProfileField extends ConsumerStatefulWidget{
   const ProfileField({super.key, required this.fieldName, required this.fieldValue, this.condition});
 
   final String fieldName;
@@ -11,10 +13,10 @@ class ProfileField extends StatefulWidget{
 
 
   @override
-  State<ProfileField> createState() => _ProfileFieldState();
+  ConsumerState<ProfileField> createState() => _ProfileFieldState();
 }
 
-class _ProfileFieldState extends State<ProfileField> { 
+class _ProfileFieldState extends ConsumerState<ProfileField> { 
   bool _isEdit = false;
   final _formKey = GlobalKey<FormState>();
   String _fieldUpdated = '';
@@ -24,8 +26,8 @@ class _ProfileFieldState extends State<ProfileField> {
     if(_formKey.currentState!.validate()){
       _formKey.currentState!.save();
       //save changed value in firebase
-      final currentUser = FirebaseAuth.instance.currentUser!;
-      await FirebaseFirestore.instance.collection('users').doc(currentUser.uid).update({widget.fieldName: _fieldUpdated});
+      final currentUser = ref.watch(currentUserProvider);
+      await FirebaseFirestore.instance.collection('users').doc(currentUser!.uid).update({widget.fieldName: _fieldUpdated});
       if(widget.fieldName == 'password'){
         currentUser.updatePassword(_fieldUpdated);
       }
@@ -39,6 +41,7 @@ class _ProfileFieldState extends State<ProfileField> {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      spacing: 20,
       children: [
         Text('${widget.fieldName.toUpperCase()}:', style: Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),),
         if(!_isEdit)
@@ -48,11 +51,13 @@ class _ProfileFieldState extends State<ProfileField> {
             Text(
               widget.fieldValue, 
               style: Theme.of(context).textTheme.bodyLarge!,
-              overflow: TextOverflow.ellipsis,),
-            if(widget.fieldName != 'email')
+              overflow: TextOverflow.ellipsis,
+            ),
+            if(widget.fieldName != 'email' && widget.fieldName != 'password')
               IconButton(onPressed: ()=>_isEdit = !_isEdit, icon: Icon(Icons.edit),),
-            if(widget.fieldName == 'email')
-              SizedBox(height: 40,)
+            if(widget.fieldName == 'password')
+              SizedBox(width:50, height: 40,)
+            
 
           ],),
         if(_isEdit)

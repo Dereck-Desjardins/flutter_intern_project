@@ -2,17 +2,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter_intern_project/providers/currentuser_provider.dart';
+import 'package:flutter_intern_project/screens/forgotPassword.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final _firebase = FirebaseAuth.instance;
 
-class ConnexionScreen extends StatefulWidget {
+class ConnexionScreen extends ConsumerStatefulWidget {
+  const ConnexionScreen({super.key});
+
   @override
-  State<StatefulWidget> createState() {
+  ConsumerState<ConnexionScreen> createState() {
     return ConnexionScreenState();
   }
 }
 
-class ConnexionScreenState extends State<ConnexionScreen> {
+class ConnexionScreenState extends ConsumerState<ConnexionScreen> {
   final _formKey = GlobalKey<FormState>();
 
   var _formMode = 'connect';
@@ -35,9 +40,9 @@ class ConnexionScreenState extends State<ConnexionScreen> {
           email: _enteredMail, 
           password: _enteredPassword
         );
-        final currentUser = FirebaseAuth.instance.currentUser!;
+        final currentUser = ref.watch(currentUserProvider);
 
-      currentUser.sendEmailVerification();
+      currentUser!.sendEmailVerification();
     //recreate a new task in firestore
       FirebaseFirestore.instance.collection('users').doc(currentUser.uid).set({
         'email': _enteredMail,
@@ -70,7 +75,6 @@ class ConnexionScreenState extends State<ConnexionScreen> {
     if (EmailValidator.validate(email)) {
       return null;
     }
-    ;
     return 'Please enter a valid Email';
   }
 
@@ -85,14 +89,18 @@ class ConnexionScreenState extends State<ConnexionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+      appBar: AppBar(
+        title: Text('TaskManager', style: TextStyle(color: Colors.white),),
+        backgroundColor: Theme.of(context).colorScheme.primary,),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 150,
           children: [
+            Container(),
             Card(
               elevation: 30,
-              color: Theme.of(context).colorScheme.secondaryContainer,
+              //color: Theme.of(context).colorScheme.secondaryContainer,
               margin: EdgeInsets.all(20),
               child: Padding(
                 padding: const EdgeInsets.all(20),
@@ -146,7 +154,7 @@ class ConnexionScreenState extends State<ConnexionScreen> {
                           alignment: Alignment.topRight,
                           child: InkWell(
                             onTap: (){
-                              //to do
+                              Navigator.push(context, MaterialPageRoute(builder: (ctx)=> const ForgotPasswordScreen()));
                             },
                             child: Text('Forgot my password', style: Theme.of(context).textTheme.labelSmall),
                           ),

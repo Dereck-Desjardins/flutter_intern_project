@@ -45,7 +45,7 @@ class ReminderManager{
         {
           return Reminder(
             taskId: element.id, 
-            frequency: convertReminderType(element!['frequency']) , 
+            frequency: convertReminderType(element['frequency']) , 
             date: element['date'] != null ? formatDateString(element['date']):null,
             hour: element['hour'] != null ?  convertTimeOfDay(element['hour']):null,
             weekday: element['weekday'] != null ? convertWeekDay(element['weekday'].toString()):null,
@@ -63,7 +63,7 @@ class ReminderManager{
 }
 
 
-final remindersDataProvider = StreamProvider  <List<Reminder>> ((ref){
+final remindersDataProvider = StreamProvider.autoDispose <List<Reminder>> ((ref){
 
   final manager = ReminderManager();
   manager._init();

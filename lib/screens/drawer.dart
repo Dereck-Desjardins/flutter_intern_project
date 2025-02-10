@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intern_project/screens/profile.dart';
+import 'package:flutter_intern_project/screens/reminders.dart';
 
 class mainDrawer extends StatelessWidget{
   const mainDrawer ({super.key});
@@ -26,6 +27,7 @@ class mainDrawer extends StatelessWidget{
 
           ),
           Column(
+            spacing: 15,
             children: [
               ListTile(
                 leading: Icon(Icons.person,
@@ -39,20 +41,18 @@ class mainDrawer extends StatelessWidget{
                   Navigator.push(context, MaterialPageRoute(builder: (ctx)=>ProfileScreen()),);
                 },
               ),
-              const SizedBox(height: 15,),
               
-              
-              ListTile(
-                leading: Icon(Icons.notification_add,
-                
-                ),
-                title: Text('Reminders', style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                  color: Theme.of(context).colorScheme.primary,),
-                ),
-              ),
-              const SizedBox(height: 15,),
-              
-              
+              // ListTile(
+              //   leading: Icon(Icons.notification_add,
+
+              //   ),
+              //   title: Text('Reminders', style: Theme.of(context).textTheme.titleMedium!.copyWith(
+              //     color: Theme.of(context).colorScheme.primary,),
+              //   ),onTap: () {
+              //     Navigator.pop(context);
+              //     Navigator.push(context, MaterialPageRoute(builder: (ctx)=>RemindersScreen()),);
+              //   },
+              // ),
               ListTile(
                 leading: Icon(Icons.logout,
                 
@@ -61,7 +61,8 @@ class mainDrawer extends StatelessWidget{
                   color: Theme.of(context).colorScheme.primary,),
                 ),
                 onTap: (){  
-                  FirebaseMessaging.instance.unsubscribeFromTopic(FirebaseAuth.instance.currentUser!.uid);
+                  //FirebaseMessaging.instance.unsubscribeFromTopic(FirebaseAuth.instance.currentUser!.uid);
+
                   FirebaseAuth.instance.signOut();
                 },
               ),
