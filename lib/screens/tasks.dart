@@ -36,8 +36,6 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
   @override
   void dispose() {
     super.dispose();
-   
-
   }
 
   @override

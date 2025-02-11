@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intern_project/models/reminder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -38,17 +39,17 @@ class ReminderManager{
 
 
   Future<void> _init() async{
-    final Stream<QuerySnapshot<Map<String, dynamic>>> snapshot = FirebaseFirestore.instance.collection('reminders').snapshots();
-    
-    _stream = snapshot.map((item){
-      final List<Reminder> reminderMap = item.docs.map((element){
+    final Stream<QuerySnapshot> snapshot = FirebaseFirestore.instance.collection('reminders').snapshots();
+    _stream = snapshot.map((reminder){
+      final List<Reminder> reminderMap = reminder.docs.map((element){
         {
+          print('new object');
           return Reminder(
             taskId: element.id, 
             frequency: convertReminderType(element['frequency']) , 
-            date: element['date'] != null ? formatDateString(element['date']):null,
-            hour: element['hour'] != null ?  convertTimeOfDay(element['hour']):null,
-            weekday: element['weekday'] != null ? convertWeekDay(element['weekday'].toString()):null,
+            date: element['date'] != '' ? formatDateString(element['date']):null,
+            hour: element['hour'] != '' ?  convertTimeOfDay(element['hour']):null,
+            weekday: element['weekday'] != '' ? convertWeekDay(element['weekday'].toString()):null,
           );
         }
 
