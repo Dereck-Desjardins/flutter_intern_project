@@ -11,7 +11,7 @@ class RemindersScreen extends ConsumerWidget{
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final allReminders = ref.watch(remindersDataProvider);
-    final currentUserUid = ref.watch(currentUserProvider)!.uid;
+    //final currentUserUid = ref.watch(currentUserProvider)!.uid;
 
     final myReminders = [];
     allReminders.when(

@@ -165,9 +165,6 @@ class NewTaskState extends State<NewTask> {
           
         }
       }
-      
-
-
       onlyOnce = false;
     }
 

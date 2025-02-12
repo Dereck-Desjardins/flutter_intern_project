@@ -33,7 +33,6 @@ class ConnexionScreenState extends ConsumerState<ConnexionScreen> {
 
     _formKey.currentState!.save();
 
-    _formKey.currentState!.reset();
     try {
       if(_formMode != 'connect'){
         await _firebase.createUserWithEmailAndPassword(
@@ -80,10 +79,10 @@ class ConnexionScreenState extends ConsumerState<ConnexionScreen> {
 
   String? _validatePassword(String password) {
     //Complexifier la demande de mot de passe possible
-    if (password.trim().length < 8 && password.length>20) {
-      return 'The password must be at least 8 characters';
+    if (password.trim().length >= 8 && password.length<20) {
+      return null;
     }
-    return null;
+    return 'The password must be at least 8 characters';
   }
 
   @override
@@ -94,129 +93,130 @@ class ConnexionScreenState extends ConsumerState<ConnexionScreen> {
         title: Text('TaskManager', style: TextStyle(color: Colors.white),),
         backgroundColor: Theme.of(context).colorScheme.primary,),
       body: Center(
-        child: Column(
-          spacing: 150,
-          children: [
-            Container(),
-            Card(
-              elevation: 30,
-              //color: Theme.of(context).colorScheme.secondaryContainer,
-              margin: EdgeInsets.all(20),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      Text(
-                        _formMode == 'connect' ? 'Login': 'Create an account',
-                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
-                      ),
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'Email',
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(),
+              Card(
+                elevation: 30,
+                //color: Theme.of(context).colorScheme.secondaryContainer,
+                margin: EdgeInsets.all(20),
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        Text(
+                          _formMode == 'connect' ? 'Login ': 'Create an account',
+                          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
                         ),
-                        keyboardType: TextInputType.emailAddress,
-                        textCapitalization: TextCapitalization.none,
-                        autocorrect: false,
-                        validator: (value) {
-                          if (value != null) {
-                            return _validateMail(value);
-                          }
-                          return 'Please enter an Email to this field';
-                        },
-                        onSaved: (value) {
-                          _enteredMail = value!;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'Password',
-                        ),
-                        obscureText: true,
-                        validator: (value) {
-                          if (value != null) {
-                            return _validatePassword(value);
-                          }
-                          return 'Please enter a password to this field';
-                        },
-                        onSaved: (value) {
-                          _enteredPassword = value!;
-                        },
-                      ),
-                      if(_formMode == 'connect')
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: InkWell(
-                            onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (ctx)=> const ForgotPasswordScreen()));
-                            },
-                            child: Text('Forgot my password', style: Theme.of(context).textTheme.labelSmall),
+                        TextFormField(
+                          decoration: const InputDecoration(
+                            labelText: 'Email',
                           ),
-                        ),  
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextButton(
-                              onPressed: () {
-                                _formKey.currentState!.reset();
+                          keyboardType: TextInputType.emailAddress,
+                          textCapitalization: TextCapitalization.none,
+                          autocorrect: false,
+                          validator: (value) {
+                            if (value != null) {
+                              return _validateMail(value);
+                            }
+                            return 'Please enter an Email to this field';
+                          },
+                          onSaved: (value) {
+                            _enteredMail = value!;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        TextFormField(
+                          decoration: const InputDecoration(
+                            labelText: 'Password',
+                          ),
+                          obscureText: true,
+                          validator: (value) {
+                            if (value != null) {
+                              return _validatePassword(value);
+                            }
+                            return 'Please enter a password to this field';
+                          },
+                          onSaved: (value) {
+                            _enteredPassword = value!;
+                          },
+                        ),
+                        if(_formMode == 'connect')
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: InkWell(
+                              onTap: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (ctx)=> const ForgotPasswordScreen()));
                               },
-                              child: Text('Reset'),
-                            )
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: _submit, 
-                              child: Text(_formMode == 'connect' ? 'Login':"Submit"),
-                            )
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 15,),
-                      Row(
-                        children: [
-                          Expanded(    
-                            child: Center(
-                              child: Column(
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      if(_formMode == 'connect'){
-                                        setState(() {
-                                          _formMode = 'create';
-                                        });
-                                      }
-                                      else{
-                                        setState(() {
-                                          _formMode = 'connect';
-                                        });
-                                      }
-                                    },
-                                    child: Text(_formMode == 'connect' ? 'Create an account': 'Go to Log in', style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Theme.of(context).colorScheme.primary)),
-                                  ),
-                                ],
+                              child: Text('Forgot my password', style: Theme.of(context).textTheme.labelSmall),
+                            ),
+                          ),  
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextButton(
+                                onPressed: () {
+                                  _formKey.currentState!.reset();
+                                },
+                                child: Text('Reset'),
+                              )
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: _submit, 
+                                child: Text(_formMode == 'connect' ? 'Login':"Submit"),
+                              )
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 15,),
+                        Row(
+                          children: [
+                            Expanded(    
+                              child: Center(
+                                child: Column(
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        if(_formMode == 'connect'){
+                                          setState(() {
+                                            _formMode = 'create';
+                                          });
+                                        }
+                                        else{
+                                          setState(() {
+                                            _formMode = 'connect';
+                                          });
+                                        }
+                                      },
+                                      child: Text(_formMode == 'connect' ? 'Create an account': 'Go to Log in', style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Theme.of(context).colorScheme.primary)),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

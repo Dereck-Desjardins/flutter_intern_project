@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intern_project/providers/currentuser_provider.dart';
 import 'package:flutter_intern_project/widget/profile_field.dart';
@@ -30,7 +29,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         _email = userProfileInfos['email'];
       });
     }
-
   }
 
   

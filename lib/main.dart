@@ -6,6 +6,7 @@ import 'package:flutter_intern_project/screens/connexion.dart';
 import 'package:flutter_intern_project/screens/tasks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+
 void main() async{
   
 WidgetsFlutterBinding.ensureInitialized();
